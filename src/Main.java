@@ -13,11 +13,10 @@ public class Main {
         Hands dealtHands = deck.dealDeck();
 
         //Sort Hand
-        dealtHands.callSortHand();
+        dealtHands.sortHands();
 
         // Pick Trump
         Card trumpCard = dealtHands.pickTrump();
-        String trump = trumpCard.getSuit();
 
         // Play three Tricks
         int team1Wins = 0;
@@ -25,7 +24,7 @@ public class Main {
         int winningPlayer= 0;
 
         for (int trickNumber = 1; trickNumber <= 5; trickNumber++) {
-            Trick trick = new Trick(dealtHands, trump, (trickNumber == 1) ? 0 : winningPlayer);
+            Trick trick = new Trick(dealtHands, trumpCard, (trickNumber == 1) ? 1 : winningPlayer);
             winningPlayer = trick.playTrick();
             int winningTeam = trick.determineWinningTeam(winningPlayer);
 
@@ -34,17 +33,17 @@ public class Main {
                 team1Wins++;
                 TextUtil.textBrick();
                 TextUtil.textLine();
-                System.out.println("Trump: " + trump);
+                System.out.println("Trump: " + trumpCard.getSuit());
                 TextUtil.textLine();
                 trick.printPlayedCards();
-                System.out.println("\nTeam 1 Wins the Trick. Player " + (winningPlayer + 1) + "goes first.");
+                System.out.println("\nTeam 1 Wins the Trick. Player " + (winningPlayer + 1) + " goes first.");
                 TextUtil.textLine();
 
             } else if (winningTeam == 2) {
                 team2Wins++;
                 TextUtil.textBrick();
                 TextUtil.textLine();
-                System.out.println("Trump: " + trump);
+                System.out.println("Trump: " + trumpCard.getSuit());
                 TextUtil.textLine();
                 trick.printPlayedCards();
                 if (trickNumber != 5) {

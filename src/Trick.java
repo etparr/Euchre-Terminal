@@ -2,7 +2,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 public class Trick {
     Scanner scanner = new Scanner(System.in);
-    private String trumpSuit;
+    private Card trump;
     private int leadPlayer;
     private Card[] playedCards;
     private Hands hands;
@@ -10,12 +10,12 @@ public class Trick {
     /**
      * Constructs a new Trick object.
      *
-     * @param hands      The hands of the players participating in the trick.
-     * @param trumpSuit  The suit designated as the trump suit for the trick.
+     * @param hands The hands of the players participating in the trick.
+     * @param trump The suit designated as the trump suit for the trick.
      * @param leadPlayer The index of the player leading the trick.
      */
-    public Trick(Hands hands, String trumpSuit, int leadPlayer) {
-        this.trumpSuit = trumpSuit;
+    public Trick(Hands hands, Card trump, int leadPlayer) {
+        this.trump = trump;
         this.leadPlayer = leadPlayer;
         this.hands = hands;
         this.playedCards = new Card[4];
@@ -51,7 +51,7 @@ public class Trick {
         TextUtil.textBrick();
         TextUtil.textLine();
 
-        System.out.println("Trump: "  + trumpSuit);
+        System.out.println("Trump: "  + trump.getSuit());
         TextUtil.textLine();
 
         System.out.println("Played Cards: ");
@@ -87,57 +87,73 @@ public class Trick {
         hands.removeCard(player, cardIndex);
     }
 
+    /**
+     * Determines the winning player based on the highest-value card played in a trick.
+     * It compares the cards played by each player and selects the one with the highest rank.
+     * If a trump suit is in play, it gives priority to the highest trump card; otherwise,
+     * it chooses the highest card of the leading suit.
+     *
+     * @return The index of the winning player (0, 1, 2, or 3) in the current trick.
+     */
     public int determineWinningPlayer() {
         Card highestValueCard = new Card(playedCards[0].getSuit(), new Rank ("Eight", 8));
-        Card highestTrumpCard = new Card(trumpSuit, new Rank ("Eight", 8));
+        Card highestTrumpCard = new Card(trump.getSuit(), new Rank ("Eight", 8));
+
         for (int i = 0; i < playedCards.length; i++) {
-            if (playedCards[i].getSuit().equals(trumpSuit)) {
+            boolean isTrumpSuit = playedCards[i].getSuit().equals(trump.getSuit());
+            boolean isOppositeSuitJack = playedCards[i].getSuit().equals(trump.oppositeSuit()) && playedCards[i].getName().equals("Jack");
+            boolean isLeadingCardSuit = playedCards[i].getSuit().equals(playedCards[0].getSuit());
+
+            if (isTrumpSuit || isOppositeSuitJack) {
                 if (playedCards[i].getRankValue() > highestTrumpCard.getRankValue()) {
                     highestTrumpCard = playedCards[i];
                 }
-            } else if (playedCards[i].getSuit().equals(playedCards[0].getSuit())) {
-                if (playedCards[i].getRankValue() > highestTrumpCard.getRankValue()) {
+            } else if (isLeadingCardSuit) {
+                if (playedCards[i].getRankValue() > highestValueCard.getRankValue()) {
                     highestValueCard = playedCards[i];
                 }
             }
         }
         // Debugging
-        /**
-        Card tcard = highestTrumpCard;
-        Card vcard = highestValueCard;
-        System.out.println(tcard.getSuit() + " " + tcard.getRank());
-        System.out.println(vcard.getSuit() + " " + vcard.getRank());
-         **/
-
+        Card tCard = highestTrumpCard;
+        Card vCard = highestValueCard;
+        System.out.println(tCard.getSuit() + " " + tCard.getName());
+        System.out.println(vCard.getSuit() + " " + vCard.getName());
         if (highestTrumpCard.getRankValue() > 8) {
-            return findPlayerByCard(highestTrumpCard);
+            return findWinningPlayerByWinningCard(highestTrumpCard);
         }
         else {
-            return findPlayerByCard(highestValueCard);
+            return findWinningPlayerByWinningCard(highestValueCard);
         }
     }
 
     public int determineWinningTeam(int winningPlayer) {
-        int winningTeam;
+        int winningTeam = -1;
         if (winningPlayer == 0 || winningPlayer == 2) {
             winningTeam = 1;
         }
-        else {
+        else if (winningPlayer == 1 || winningPlayer == 3) {
             winningTeam = 2;
         }
         return winningTeam;
     }
     // 0 1 2 3
-    public int findPlayerByCard(Card winningCard) {
+    public int findWinningPlayerByWinningCard(Card winningCard) {
         int n = -1;
+        int playerCount = 4;
         for (int i = 0; i < playedCards.length; i++) {
-            if (playedCards[i].equals(winningCard)) {
-                n = (leadPlayer + i) % 3;
+            boolean isSameSuit = playedCards[i].getSuit().equals(winningCard.getSuit());
+            boolean isSameRankName = playedCards[i].getName().equals(winningCard.getName());
+            boolean isSameCard = isSameRankName && isSameSuit;
+
+            if (isSameCard) {
+                n = i;
                 break;
             }
         }
         return n;
     }
+
     public void printPlayedCards() {
         for (int i = 0; i < playedCards.length; i++) {
             Card card = playedCards[i];
@@ -147,5 +163,14 @@ public class Trick {
                 System.out.println((i + 1) + ". Card not played");
             }
         }
+    }
+
+    /**
+     * Set the played card
+     * @param card
+     * @param index
+     */
+    public void setPlayedCard(Card card, int index) {
+        playedCards[index] = card;
     }
 }

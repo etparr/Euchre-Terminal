@@ -34,6 +34,7 @@ public class Card {
         return null;
      }
 
+
     public int getRankValue() {
         return rank.getValue();
     }

@@ -17,19 +17,27 @@ public class Hands {
     }
 
     public Card getCardInHand(int handIndex, int cardIndex) {
+
         return hands[handIndex][cardIndex];
     }
 
     public Card[] getHand(int handIndex) {
+
         return hands[handIndex];
     }
 
     public void removeCard(int handIndex, int cardIndex) {
+
         hands[handIndex][cardIndex] = null;
     }
 
-    public int getLengthOfHand(int player) {
-        return hands[player].length;
+    /**
+     *
+     * @param handIndex
+     * @return int length
+     */
+    public int getLengthOfHand(int handIndex) {
+        return hands[handIndex].length;
     }
 
     public void printHands() {
@@ -37,13 +45,14 @@ public class Hands {
             System.out.println("\nHand " + i);
             for (int j = 0; j < hands[i].length; j++) {
                 Card card = hands[i][j];
-                System.out.println((j + 1) + ". " + card.getSuit() + " " + card.getName());
+                System.out.println((j + 1) + ". " + card.getSuit() + " " + card.getName() + " Value: " + card.getRankValue());
             }
         }
+
         System.out.println("\nDealers Pool");
         for (int i = 0; i < hands[4].length - 1; i++) {
             Card card = hands[4][i];
-            System.out.println((i + 1) + ". " + card.getSuit() + " " + card.getName());
+            System.out.println((i + 1) + ". " + card.getSuit() + " " + card.getName() + " Value: " + card.getRankValue());
         }
     }
 
@@ -242,6 +251,13 @@ public class Hands {
         }
     }
 
+    public void sortHands() {
+        int playerCount = 4;
+        for (int i = 0; i < playerCount; i++) {
+            sortHand(i);
+        }
+    }
+
     private void establishBowers(Card trump) {
         int playerCount = 4;
 
@@ -257,11 +273,7 @@ public class Hands {
                 }
             }
         }
+        printHands();
     }
-
-
-
-
-
 }
 
