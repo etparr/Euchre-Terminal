@@ -34,7 +34,12 @@ public class Card {
         return null;
      }
 
-
+    /**
+     * @return String
+     */
+    public String cardToString(){
+        return (this.getName() + " of " + this.getSuit());
+}
     public int getRankValue() {
         return rank.getValue();
     }

@@ -12,11 +12,14 @@ public class Main {
         //deal deck
         Hands dealtHands = deck.dealDeck();
 
-        //Sort Hand
-        dealtHands.sortHands();
+        //Sort Hands
+        dealtHands.sortHandsNoBower();
 
         // Pick Trump
         Card trumpCard = dealtHands.pickTrump();
+
+        //Sort Hands with Trump
+        dealtHands.sortHandsWithBower(trumpCard);
 
         // Play three Tricks
         int team1Wins = 0;

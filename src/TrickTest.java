@@ -91,7 +91,7 @@ class TrickTest {
         @Test
         void testNoTrumpFollowLeadingSuit() {
 
-            trick.setPlayedCard(new Card("Diamonds", new Rank("Jack", 11)), 0);
+            trick.setPlayedCard(new Card("Diamonds", new Rank("Ten", 10)), 0);
             trick.setPlayedCard(new Card("Diamonds", new Rank("King", 13)), 1);
             trick.setPlayedCard(new Card("Diamonds", new Rank("Ace", 14)), 2);
             trick.setPlayedCard(new Card("Diamonds", new Rank("Queen", 12)), 3);
@@ -105,12 +105,12 @@ class TrickTest {
 
             trick.setPlayedCard(new Card("Diamonds", new Rank("Nine", 9)), 0);
             trick.setPlayedCard(new Card("Diamonds", new Rank("Ten", 10)), 1);
-            trick.setPlayedCard(new Card("Diamonds", new Rank("Jack", 11)), 2);
+            trick.setPlayedCard(new Card("Diamonds", new Rank("King", 13)), 2);
             trick.setPlayedCard(new Card("Diamonds", new Rank("Queen", 12)), 3);
 
             int winningPlayer = trick.determineWinningPlayer();
 
-            assertEquals(3, winningPlayer, "Player 3 should win with the Queen of Diamonds.");
+            assertEquals(2, winningPlayer, "Player 3 should win with the Queen of Diamonds.");
         }
         @Test
         void testNoTrumpFollowLeadingSuit3() {

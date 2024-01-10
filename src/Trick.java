@@ -29,7 +29,7 @@ public class Trick {
     public int playTrick() {
         for (int i = 0; i < 4; i++) {
             int currentPlayer = (leadPlayer + i) % 4;
-            playCard(currentPlayer);
+            playCard(currentPlayer, i);
         }
         return determineWinningPlayer();
     }
@@ -44,7 +44,7 @@ public class Trick {
      * @param player the index of the player who is playing the card (0-based index).
      *               For example, if 'player' is 0, it refers to the first player.
      */
-    public void playCard(int player) {
+    public void playCard(int player, int turn) {
         int cardIndex = -1;
         boolean validInput = false;
 
@@ -83,7 +83,7 @@ public class Trick {
         }
 
         Card card = hands.getCardInHand(player, cardIndex);
-        playedCards[player] = card;
+        playedCards[turn] = card;
         hands.removeCard(player, cardIndex);
     }
 
@@ -114,11 +114,14 @@ public class Trick {
                 }
             }
         }
+
+        /**
         // Debugging
         Card tCard = highestTrumpCard;
         Card vCard = highestValueCard;
         System.out.println(tCard.getSuit() + " " + tCard.getName());
         System.out.println(vCard.getSuit() + " " + vCard.getName());
+         **/
         if (highestTrumpCard.getRankValue() > 8) {
             return findWinningPlayerByWinningCard(highestTrumpCard);
         }
@@ -147,7 +150,7 @@ public class Trick {
             boolean isSameCard = isSameRankName && isSameSuit;
 
             if (isSameCard) {
-                n = i;
+                n = (leadPlayer + i) % playerCount;
                 break;
             }
         }
@@ -155,12 +158,14 @@ public class Trick {
     }
 
     public void printPlayedCards() {
+        int playerCount = 4;
         for (int i = 0; i < playedCards.length; i++) {
-            Card card = playedCards[i];
+            Card card = playedCards[(leadPlayer + i) % playerCount];
+
             if (card != null) {
-                System.out.println((i + 1) + ". " + card.getSuit() + " " + card.getName());
+                System.out.println("Player " + (i + 1) + ": " + card.getName() + " of " + card.getSuit());
             } else {
-                System.out.println((i + 1) + ". Card not played");
+                System.out.println("Player " + (i + 1) + ": Card not played");
             }
         }
     }

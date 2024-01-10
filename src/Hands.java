@@ -11,13 +11,21 @@ public class Hands {
         hands = new Card[numberOfSets + 1][cardsPerSet];
     }
 
-    public void setHands(int handIndex, int
-            cardIndex, Card card) {
+    /**
+     * @param handIndex
+     * @param cardIndex
+     * @param card
+     */
+    public void setHands(int handIndex, int cardIndex, Card card) {
         hands[handIndex][cardIndex] = card;
     }
 
+    /**
+     * @param handIndex
+     * @param cardIndex
+     * @return Card
+     */
     public Card getCardInHand(int handIndex, int cardIndex) {
-
         return hands[handIndex][cardIndex];
     }
 
@@ -32,7 +40,6 @@ public class Hands {
     }
 
     /**
-     *
      * @param handIndex
      * @return int length
      */
@@ -60,7 +67,7 @@ public class Hands {
         for (int i = 0; i < hands.length; i++) {
             Card card = hands[hand][i];
             if (card != null) {
-                System.out.println((i + 1) + ". " + card.getSuit() + " " + card.getName());
+                System.out.println((i + 1) + ". " + card.getName() + " of " + card.getSuit());
             }
         }
     }
@@ -71,7 +78,7 @@ public class Hands {
 
     public void printTopOfDealersPool() {
         Card card = getTopOfDealersPool();
-        System.out.println("Trump: " + card.getSuit() + " " + card.getName());
+        System.out.println("Trump: " + card.getName() + " of " + card.getSuit());
     }
 
     /**
@@ -188,8 +195,10 @@ public class Hands {
         return trump;
     }
 
-
-    public void callSortHand() {
+    /**
+     * Lets players choose if they want to sort hands, then sorts depending on decision.
+     */
+    public void callSortHand(Card trumpCard) {
         int playerCount = 4;
 
         for (int i = 1; i <= playerCount; i++) {
@@ -224,39 +233,80 @@ public class Hands {
                 }
             }
             if (decision == 1) {
-                sortHand(currentPlayer);
+                sortHandNoBower(currentPlayer);
             }
         }
     }
 
     /**
-     * Sorts a player's hand of cards in ascending order based on their suits.
+     * Sorts a player's hand of cards in ascending order based on their suits. Does not sort left bower.
      *
      * @param player The player for whom to sort the hand.
      */
-    public void sortHand(int player) {
-        int handLength = hands[player].length;
+    public void sortHandNoBower(int player) {
+        // Retrieve the player's hand
+        Card[] hand = hands[player];
+        boolean sorted = false;
 
-        for (int i = 0; i < handLength - 1; i++) {
-            for (int j = 0; j < handLength - i - 1; j++) {
-                Card card1 = hands[player][j];
-                Card card2 = hands[player][j + 1];
+        while (!sorted) {
+            sorted = true;
 
-                if (card1.getSuit().compareTo(card2.getSuit()) > 0) {
-                    Card temp = card1;
-                    hands[player][j] = card2;
-                    hands[player][j + 1] = temp;
+            for (int i = 0; i < hand.length - 1; i++) {
+                if (shouldSwapNoBower(hand[i], hand[i + 1])) {
+                    // Swap the cards
+                    Card temp = hand[i];
+                    hand[i] = hand[i + 1];
+                    hand[i + 1] = temp;
+                    sorted = false;
                 }
             }
         }
     }
 
-    public void sortHands() {
-        int playerCount = 4;
-        for (int i = 0; i < playerCount; i++) {
-            sortHand(i);
+    public void sortHandWithBower(int player, Card trumpCard) {
+        // Retrieve the player's hand
+        Card[] hand = hands[player];
+        boolean sorted = false;
+
+        while (!sorted) {
+            sorted = true;
+
+            for (int i = 0; i < hand.length - 1; i++) {
+                if (shouldSwapWithBower(hand[i], hand[i + 1], trumpCard)) {
+                    // Swap the cards
+                    Card temp = hand[i];
+                    hand[i] = hand[i + 1];
+                    hand[i + 1] = temp;
+                    sorted = false;
+                }
+            }
         }
     }
+
+    /**
+     * Sorts each player hand + dealers pool with bower
+     * @param trumpCard
+     */
+    public void sortHandsWithBower(Card trumpCard) {
+        int playerCount = 4;
+        for (int i = 0; i < playerCount; i++) {
+            sortHandWithBower(i, trumpCard);
+        }
+    }
+
+    /**
+     * Sorts each player hand without the right bower.
+     */
+    public void sortHandsNoBower() {
+        int playerCount = 4;
+        for (int i = 0; i < playerCount; i++) {
+            sortHandNoBower(i);
+        }
+    }
+
+
+
+
 
     private void establishBowers(Card trump) {
         int playerCount = 4;
@@ -266,14 +316,46 @@ public class Hands {
                 if (hands[i][j].getName().equals("Jack")) {
                     if (hands[i][j].getSuit().equals(trump.getSuit())) {
                         hands[i][j].setValueOfCard(15);
-                    }
-                    else if (hands[i][j].getSuit().equals(trump.oppositeSuit())) {
+                    } else if (hands[i][j].getSuit().equals(trump.oppositeSuit())) {
                         hands[i][j].setValueOfCard(14);
                     }
                 }
             }
         }
         printHands();
+    }
+
+    private boolean shouldSwapWithBower(Card card1, Card card2, Card trumpCard) {
+        String trumpSuit = trumpCard.getSuit();
+        String rightBowerSuit = trumpCard.oppositeSuit();
+
+        boolean isRightBower1 = card1.getSuit().equals(rightBowerSuit) && card1.getRankValue() == 11; // Assuming Jack has rank value 11
+        boolean isRightBower2 = card2.getSuit().equals(rightBowerSuit) && card2.getRankValue() == 11;
+
+        // Special handling for right bower
+        if (isRightBower1 && !isRightBower2) return true;
+        if (!isRightBower1 && isRightBower2) return false;
+
+        // Sort by suit
+        if (!card1.getSuit().equals(card2.getSuit())) {
+            return card1.getSuit().compareTo(card2.getSuit()) > 0;
+        }
+
+        // Sort by rank within the same suit
+        return card1.getRankValue() > card2.getRankValue();
+    }
+
+    private boolean shouldSwapNoBower(Card card1, Card card2) {
+        // Sort by suit first
+        int suitComparison = card1.getSuit().compareTo(card2.getSuit());
+        if (suitComparison > 0) {
+            return true;
+        } else if (suitComparison < 0) {
+            return false;
+        }
+
+        // If suits are the same, sort by rank
+        return card1.getRankValue() > card2.getRankValue();
     }
 }
 

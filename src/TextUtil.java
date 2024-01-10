@@ -9,7 +9,7 @@ public class TextUtil {
 
     /**
      * Returns text line
-     * "*~~~~~~~~~~~~~~~~~~~~~~~~~~~*"
+     * "*~~~~~~~~~~~w~~~~~~~~~~~~~~~~*"
      */
     public static void textLine() {
         System.out.println("*~~~~~~~~~~~~~~~~~~~~~~~~~~~*");
