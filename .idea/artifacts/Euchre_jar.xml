@@ -1,0 +1,19 @@
+<component name="ArtifactManager">
+  <artifact name="Euchre:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Euchre_jar</output-path>
+    <root id="root">
+      <element id="archive" name="Euchre.jar">
+        <element id="module-output" name="Euchre" />
+      </element>
+      <element id="library" level="module" name="testng" module-name="Euchre" />
+      <element id="file-copy" path="$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter/5.8.1/junit-jupiter-5.8.1.jar" />
+      <element id="file-copy" path="$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter-api/5.8.1/junit-jupiter-api-5.8.1.jar" />
+      <element id="file-copy" path="$MAVEN_REPOSITORY$/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar" />
+      <element id="file-copy" path="$MAVEN_REPOSITORY$/org/junit/platform/junit-platform-commons/1.8.1/junit-platform-commons-1.8.1.jar" />
+      <element id="file-copy" path="$MAVEN_REPOSITORY$/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar" />
+      <element id="file-copy" path="$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter-params/5.8.1/junit-jupiter-params-5.8.1.jar" />
+      <element id="file-copy" path="$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter-engine/5.8.1/junit-jupiter-engine-5.8.1.jar" />
+      <element id="file-copy" path="$MAVEN_REPOSITORY$/org/junit/platform/junit-platform-engine/1.8.1/junit-platform-engine-1.8.1.jar" />
+    </root>
+  </artifact>
+</component>

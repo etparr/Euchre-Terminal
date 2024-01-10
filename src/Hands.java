@@ -305,9 +305,6 @@ public class Hands {
     }
 
 
-
-
-
     private void establishBowers(Card trump) {
         int playerCount = 4;
 
@@ -322,7 +319,6 @@ public class Hands {
                 }
             }
         }
-        printHands();
     }
 
     private boolean shouldSwapWithBower(Card card1, Card card2, Card trumpCard) {
